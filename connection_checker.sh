@@ -32,7 +32,7 @@ fi
 
 while true; do
     if [ -z "$local_ip" ]; then
-        break
+        exit 0
     fi
 
     if ! echo "$local_ip" | grep -q '^100\.'; then
