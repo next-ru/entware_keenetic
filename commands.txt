@@ -1,0 +1,22 @@
+<cli>
+no system mount <volume>
+opkg extfs format (<volume> | sdXY)
+opkg dns-override
+opkg disk <volume>
+opkg initrc /opt/etc/init.d/rc.unslung
+system configuration save
+
+<ssh>
+opkg update
+opkg upgrade
+opkg install adguardhome-go cron curl ca-certificates wget-ssl fake-hwclock
+mkdir -p /opt/etc/opkg
+echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mipsel" > /opt/etc/opkg/nfqws-keenetic.conf
+opkg update
+opkg install nfqws-keenetic
+/opt/etc/init.d/S99adguardhome stop
+/opt/etc/init.d/S51nfqws stop
+/opt/etc/init.d/S99adguardhome start
+/opt/etc/init.d/S51nfqws start
+tar cvzf /opt/backup.tar.gz -C /opt .
+tar cvzf /opt/entware.backup.$(date +%d%m%Y).tar.gz -C /opt .
