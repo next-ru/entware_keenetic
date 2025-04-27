@@ -2,6 +2,7 @@
 
 log_file="/opt/var/log/connection_checker.log"
 sites="https://api.ipify.org https://checkip.amazonaws.com https://icanhazip.com"
+local_ip="$address"
 
 is_running() {
     local pid_file="/opt/var/run/$1.pid"
@@ -54,8 +55,6 @@ case "$1" in
 		
         log "Internet connection established"
         touch /tmp/.is_online
-
-        local_ip="$address"
 
         while true; do
             for site in $sites; do
