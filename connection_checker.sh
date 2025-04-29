@@ -30,22 +30,22 @@ if [ ! -f "/tmp/.last_boot" ]; then
     log "system ready, uptime $(awk '{print int($1)}' /proc/uptime) seconds"
 fi
 
-while true; do
-    if [ -z "$local_ip" ]; then
-        exit 0
-    fi
+# while true; do
+    # if [ -z "$local_ip" ]; then
+        # exit 0
+    # fi
 
-    if ! echo "$local_ip" | grep -q '^100\.'; then
-        break
-    fi
+    # if ! echo "$local_ip" | grep -q '^100\.'; then
+        # break
+    # fi
 
-    log "Carrier-Grade NAT detected (local IP address $local_ip), reconnecting PPPoE..."
+    # log "Carrier-Grade NAT detected (local IP address $local_ip), reconnecting PPPoE..."
     
-    curl -X DELETE "http://localhost:79/rci/interface/connect?name=PPPoE0" >/dev/null 2>&1
-    sleep 2
-    curl -X POST -d '{}' "http://localhost:79/rci/interface/connect?name=PPPoE0&via=ISP" >/dev/null 2>&1
-    sleep 5
-done
+    # curl -X DELETE "http://localhost:79/rci/interface/connect?name=PPPoE0" >/dev/null 2>&1
+    # sleep 2
+    # curl -X POST -d '{}' "http://localhost:79/rci/interface/connect?name=PPPoE0&via=ISP" >/dev/null 2>&1
+    # sleep 5
+# done
 
 case "$1" in
     start)
@@ -66,6 +66,10 @@ case "$1" in
                 sleep 1
             done
         done
+
+        if ! grep -q "0" "/var/tmp/pppchain"; then
+            exit 0
+        fi
 
         if is_running "AdGuardHome"; then
             log "Service AdGuardHome is already running"
