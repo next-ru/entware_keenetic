@@ -53,7 +53,7 @@ case "$1" in
             exit 0
         fi		
 		
-        log "Internet connection established"
+        log "Internet access detected"
         touch /tmp/.is_online
 
         while true; do
@@ -67,9 +67,9 @@ case "$1" in
             done
         done
 
-        if ! grep -q "0" "/var/tmp/pppchain"; then
-            exit 0
-        fi
+        # if ! grep -q "0" "/var/tmp/pppchain"; then
+            # exit 0
+        # fi
 
         if is_running "AdGuardHome"; then
             log "Service AdGuardHome is already running"
@@ -87,7 +87,7 @@ case "$1" in
         ;;
 
     stop)
-        log "Internet connection terminated"
+        log "Internet access lost"
         rm -f /tmp/.is_online
 
         for i in $(seq 1 15); do
