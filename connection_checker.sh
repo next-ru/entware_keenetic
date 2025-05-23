@@ -32,7 +32,7 @@ log() {
 
 # while true; do
     # if [ -z "$local_ip" ]; then
-        # exit 0
+        # break
     # fi
 
     # if ! echo "$local_ip" | grep -q '^100\.'; then
