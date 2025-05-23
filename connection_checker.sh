@@ -25,10 +25,10 @@ log() {
     echo "$(date +"%b %d %Y %H:%M:%S") $1" >> "$log_file"
 }
 
-if [ ! -f "/tmp/.last_boot" ]; then
-    touch "/tmp/.last_boot"
-    log "system ready, uptime $(awk '{print int($1)}' /proc/uptime) seconds"
-fi
+# if [ ! -f "/tmp/.last_boot" ]; then
+    # touch "/tmp/.last_boot"
+    # log "system ready, uptime $(awk '{print int($1)}' /proc/uptime) seconds"
+# fi
 
 # while true; do
     # if [ -z "$local_ip" ]; then
