@@ -1,8 +1,7 @@
 #!/bin/sh
 
-log_file="/opt/var/log/connection_checker.log"
+log_file="/opt/var/log/netmon.log"
 sites="https://api.ipify.org https://checkip.amazonaws.com https://icanhazip.com"
-local_ip="$address"
 
 is_running() {
     local pid_file="/opt/var/run/$1.pid"
@@ -24,11 +23,6 @@ get_public_ip() {
 log() {
     echo "$(date +"%b %d %Y %H:%M:%S") $1" >> "$log_file"
 }
-
-# if [ ! -f "/tmp/.last_boot" ]; then
-    # touch "/tmp/.last_boot"
-    # log "system ready, uptime $(awk '{print int($1)}' /proc/uptime) seconds"
-# fi
 
 # while true; do
     # if [ -z "$local_ip" ]; then
@@ -56,6 +50,8 @@ case "$1" in
         log "Internet access detected"
         touch /tmp/.is_online
 
+        local_ip="$address"
+
         while true; do
             for site in $sites; do
                 public_ip=$(get_public_ip "$site")
@@ -67,22 +63,18 @@ case "$1" in
             done
         done
 
-        # if ! grep -q "0" "/var/tmp/pppchain"; then
-            # exit 0
-        # fi
-
         if is_running "AdGuardHome"; then
             log "Service AdGuardHome is already running"
         else
             log "Starting AdGuardHome service"
-            /opt/etc/init.d/S99adguardhome start
+            /opt/etc/init.d/K99adguardhome start
         fi
 
         if is_running "nfqws"; then
             log "Service NFQWS is already running"
         else
             log "Starting NFQWS service"
-            /opt/etc/init.d/S51nfqws start
+            /opt/etc/init.d/K51nfqws start
         fi
         ;;
 
@@ -99,14 +91,14 @@ case "$1" in
 
         if is_running "AdGuardHome"; then
             log "Stopping AdGuardHome service"
-            /opt/etc/init.d/S99adguardhome stop
+            /opt/etc/init.d/K99adguardhome stop
         else
             log "Service AdGuardHome is not running"
         fi
 
         if is_running "nfqws"; then
             log "Stopping NFQWS service"
-            /opt/etc/init.d/S51nfqws stop
+            /opt/etc/init.d/K51nfqws stop
         else
             log "Service NFQWS is not running"
         fi
