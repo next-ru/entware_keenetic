@@ -2,6 +2,7 @@
 no system mount <volume>
 opkg extfs format (<volume> | sdXY)
 opkg dns-override
+interface PPPoE0 ipcp no name-servers
 opkg disk <volume>
 opkg initrc /opt/etc/init.d/rc.unslung
 system configuration save
