@@ -24,6 +24,10 @@ log() {
     echo "$(date +"%b %d %Y %H:%M:%S") $1" >> "$log_file"
 }
 
+# while [ ! -f /tmp/.ppp0_connected ]; do
+    # sleep 0.1
+# done
+
 # while true; do
     # if [ -z "$local_ip" ]; then
         # break
