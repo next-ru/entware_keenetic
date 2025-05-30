@@ -33,26 +33,6 @@ log() {
     # sleep 5
 # }
 
-service_action() {
-    local service_name="$1"
-    local action="$2"
-    if [ "$action" = "start" ]; then
-        if is_running "$service_name"; then
-            log "Service $service_name is already running"
-        else
-            log "Starting $service_name service"
-            /opt/etc/init.d/${service_name} start
-        fi
-    elif [ "$action" = "stop" ]; then
-        if is_running "$service_name"; then
-            log "Stopping $service_name service"
-            /opt/etc/init.d/${service_name} stop
-        else
-            log "Service $service_name is not running"
-        fi
-    fi
-}
-
 case "$1" in
     start)
         if [ -f "/tmp/.is_online" ]; then
@@ -82,8 +62,19 @@ case "$1" in
             done
         done
 
-        service_action "K99adguardhome" "start"
-        service_action "K51nfqws" "start"
+        if is_running "AdGuardHome"; then
+            log "Service AdGuardHome is already running"
+        else
+            log "Starting AdGuardHome service"
+            /opt/etc/init.d/K99adguardhome start
+        fi
+
+        if is_running "nfqws"; then
+            log "Service NFQWS is already running"
+        else
+            log "Starting NFQWS service"
+            /opt/etc/init.d/K51nfqws start
+        fi
         ;;
 
     stop)
@@ -97,7 +88,18 @@ case "$1" in
             sleep 1
         done
 
-        service_action "K99adguardhome" "stop"
-        service_action "K51nfqws" "stop"
+        if is_running "AdGuardHome"; then
+            log "Stopping AdGuardHome service"
+            /opt/etc/init.d/K99adguardhome stop
+        else
+            log "Service AdGuardHome is not running"
+        fi
+
+        if is_running "nfqws"; then
+            log "Stopping NFQWS service"
+            /opt/etc/init.d/K51nfqws stop
+        else
+            log "Service NFQWS is not running"
+        fi
         ;;
 esac
