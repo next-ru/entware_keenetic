@@ -2,6 +2,7 @@
 
 log_file="/opt/var/log/netmon.log"
 sites="https://api.ipify.org https://checkip.amazonaws.com https://icanhazip.com"
+local_ip="$address"
 
 is_running() {
     local pid_file="/opt/var/run/$1.pid"
@@ -24,26 +25,13 @@ log() {
     echo "$(date +"%b %d %Y %H:%M:%S") $1" >> "$log_file"
 }
 
-# while [ ! -f /tmp/.ppp0_connected ]; do
-    # sleep 0.1
-# done
-
-# while true; do
-    # if [ -z "$local_ip" ]; then
-        # break
-    # fi
-
-    # if ! echo "$local_ip" | grep -q '^100\.'; then
-        # break
-    # fi
-
+# reconnect_pppoe() {
     # log "Carrier-Grade NAT detected (local IP address $local_ip), reconnecting PPPoE..."
-    
     # curl -X DELETE "http://localhost:79/rci/interface/connect?name=PPPoE0" >/dev/null 2>&1
     # sleep 2
     # curl -X POST -d '{}' "http://localhost:79/rci/interface/connect?name=PPPoE0&via=ISP" >/dev/null 2>&1
     # sleep 5
-# done
+# }
 
 case "$1" in
     start)
@@ -51,10 +39,17 @@ case "$1" in
             exit 0
         fi		
 		
-        log "Internet access detected"
         touch /tmp/.is_online
+		
+        while [ ! -f /tmp/.ppp0_connected ]; do
+            sleep 1
+        done				
 
-        local_ip="$address"
+        # if echo "$local_ip" | grep -q '^100\.'; then
+            # reconnect_pppoe
+        # fi
+
+        log "Internet access detected"
 
         while true; do
             for site in $sites; do
